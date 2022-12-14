@@ -4,8 +4,9 @@ import csv
 import openpyxl
 import re
 
+
 # aria-label="Turkey Flag"
-filename = 'Turkey'
+filename = input('Enter Country: ')
 url = requests.get('https://engineer-petr.github.io/')
 
 soup = BeautifulSoup(url.text, 'html.parser')
@@ -14,10 +15,10 @@ table = soup.find_all('table')[1]
 table_body = table.find('tbody')
 rows = table_body.find_all('tr')
 
-fieldnames = ['Company', 'Company Link', 'Country', 'City', 'Relocation Status',
+fieldnames = ['Company', 'Company Link', 'Country', 'City', 'Relocation status',
               'Relocation status now', 'Source', 'Source Link', 'Last updated']
 
-with open(f'{filename}.csv', 'w', newline='') as csvfile:
+with open(f'testing/{filename}.csv', 'w', newline='') as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
 
@@ -27,7 +28,7 @@ with open(f'{filename}.csv', 'w', newline='') as csvfile:
             'Company Link': '',
             'Country': '',
             'City': '',
-            'Relocation Status': '',
+            'Relocation status': '',
             'Relocation status now': '',
             'Source': '',
             'Source Link': '',
@@ -58,27 +59,42 @@ with open(f'{filename}.csv', 'w', newline='') as csvfile:
                 data['Country'] += country + ', '
 
             # cities
-            cities = row.find_all('td')[2].contents[0]
-            data['City'] = cities
+            try:
+                cities = row.find_all('td')[2].contents[0]
+                data['City'] = cities
+            except:
+                data['City'] = ''
 
             # relocation status
-            relocation_status = row.find_all('td')[3].contents[0]
-            data['Relocation Status'] = relocation_status
+            try:
+                relocation_status = row.find_all('td')[3].contents[0]
+                data['Relocation status'] = relocation_status
+            except:
+                data['Relocation status'] = ''
 
             # relocation status now
-            relocation_status_now = row.find_all('td')[4].contents[0]
-            data['Relocation status now'] = relocation_status_now
+            try:
+                relocation_status_now = row.find_all('td')[4].contents[0]
+                data['Relocation status now'] = relocation_status_now
+            except:
+                data['Relocation status now'] = ''
 
             # source
-            source = row.find_all('td')[5].contents[0]
-            data['Source'] = source
+            try:
+                source = row.find_all('td')[5].contents[0]
+                data['Source'] = source
+            except:
+                data['Source'] = ''
 
             # last updated
-            last_updated = row.find_all('td')[6].contents[0]
-            data['Last updated'] = last_updated
+            try:
+                last_updated = row.find_all('td')[6].contents[0]
+                data['Last updated'] = last_updated
+            except:
+                data['Last updated'] = ''
 
             writer.writerow(data)
-            # print(data)
+
 
 print('done')
 
